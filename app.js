@@ -143,6 +143,10 @@ const PRODUCTS = [
 const BUILD_TS = new Date().toISOString().slice(0, 10);
 const BASE_PATH = "/goofy-clothing";
 
+if (window.location.hostname === "n473cl0.github.io" && window.location.pathname === "/") {
+  window.location.replace(`${BASE_PATH}/`);
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
