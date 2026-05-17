@@ -192,20 +192,18 @@ function hangerTee(color, size = 240) {
 }
 
 function header(pathname) {
-  const nav = CATEGORIES.map((category) => {
+  const nav = CATEGORIES.map((category, index) => {
     const href = `/category/${category.slug}`;
-    return `<a data-route href="${routeHref(href)}" class="${pathname === href ? "active" : ""}">${category.label}</a>`;
+    const slash = index === CATEGORIES.length - 1 ? "" : '<span class="muted">/</span>';
+    return `<a data-route href="${routeHref(href)}" class="${pathname === href ? "active" : ""}">${category.label}</a>${slash}`;
   }).join("");
 
   return `
     <header class="site-header">
       <div class="header-inner">
-        <a data-route href="${routeHref("/")}" class="brand" aria-label="sogoofy home">goofy<span class="brand-dot">.</span></a>
+        <a data-route href="${routeHref("/")}" class="brand" aria-label="Goofy Clothing home">Goofy Clothing<span class="brand-dot">.</span></a>
         <nav class="site-nav">
           ${nav}
-          <span class="muted">/</span>
-          <a data-route href="${routeHref("/about")}" class="${pathname === "/about" ? "active" : ""}">ABOUT</a>
-          <a data-route href="${routeHref("/contact")}" class="${pathname === "/contact" ? "active" : ""}">CONTACT</a>
         </nav>
       </div>
     </header>
@@ -219,8 +217,8 @@ function footer() {
         <div>
           <div class="muted">// info</div>
           <ul>
-            <li><a data-route href="${routeHref("/about")}">About</a></li>
-            <li><a data-route href="${routeHref("/contact")}">Contact</a></li>
+            <li><span class="muted">goofyclothing.co.uk</span></li>
+            <li><a href="mailto:hello@goofyclothing.co.uk">hello@goofyclothing.co.uk</a></li>
           </ul>
         </div>
         <div>
@@ -235,13 +233,13 @@ function footer() {
           <div class="muted">// follow</div>
           <ul>
             <li><a href="https://instagram.com">Instagram</a></li>
-            <li><a href="mailto:hi@sogoofy.com">hi@sogoofy.com</a></li>
+            <li><a href="mailto:hello@goofyclothing.co.uk">hello@goofyclothing.co.uk</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
         <div class="footer-bottom-inner">
-          <span>© sogoofy ${new Date().getFullYear()}</span>
+          <span>© Goofy Clothing ${new Date().getFullYear()}</span>
           <span>v0.1.0 · built ${BUILD_TS}</span>
         </div>
       </div>
@@ -320,49 +318,6 @@ function categoryPage(slug) {
   `;
 }
 
-function aboutPage() {
-  return `
-    <article class="page-article">
-      <div class="eyebrow">// about</div>
-      <h1>A small t-shirt brand.</h1>
-      <div class="copy">
-        <p>sogoofy is a t-shirt brand. We only make t-shirts. We started because everything else felt like a bit much.</p>
-        <p>Each piece is heavyweight cotton, garment-dyed, and screen-printed by hand in small runs. When a run sells out, that's it - the next thing will be different.</p>
-        <p>Three lines: <strong>Originals</strong> (the staples), <strong>Jon Lemen</strong> (artist collaboration), and <strong>Brew</strong> (coffee-shop everyday).</p>
-        <p class="muted">// built in the uk · shipped worldwide</p>
-      </div>
-    </article>
-  `;
-}
-
-function contactPage() {
-  return `
-    <article class="page-article narrow">
-      <div class="eyebrow">// contact</div>
-      <h1>Say hello.</h1>
-      <p class="contact-copy">
-        Email <a class="link" href="mailto:hi@sogoofy.com"><u>hi@sogoofy.com</u></a> - or use the form.
-      </p>
-      <form class="contact-form" data-contact-form>
-        <div class="field">
-          <label>Name</label>
-          <input required name="name" type="text" />
-        </div>
-        <div class="field">
-          <label>Email</label>
-          <input required name="email" type="email" />
-        </div>
-        <div class="field">
-          <label>Message</label>
-          <textarea required rows="5" name="message"></textarea>
-        </div>
-        <button class="dark-button" type="submit">Send -></button>
-        <div class="received" hidden>// received. we'll reply within 48h.</div>
-      </form>
-    </article>
-  `;
-}
-
 function productPage(slug) {
   const product = PRODUCTS.find((item) => item.slug === slug);
   if (!product) return notFoundPage();
@@ -428,8 +383,6 @@ function notFoundPage() {
 function routeFor(pathname) {
   const cleanPath = pathname.replace(/\/$/, "") || "/";
   if (cleanPath === "/") return homePage();
-  if (cleanPath === "/about") return aboutPage();
-  if (cleanPath === "/contact") return contactPage();
   if (cleanPath.startsWith("/category/")) {
     return categoryPage(decodeURIComponent(cleanPath.slice("/category/".length)));
   }
@@ -473,14 +426,6 @@ function activateRails() {
 }
 
 function activateForms() {
-  const contactForm = document.querySelector("[data-contact-form]");
-  if (contactForm) {
-    contactForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      contactForm.querySelector(".received").hidden = false;
-    });
-  }
-
   document.querySelectorAll("[data-size]").forEach((button) => {
     button.addEventListener("click", () => {
       document
@@ -493,7 +438,7 @@ function activateForms() {
   const cartButton = document.querySelector("[data-cart]");
   if (cartButton) {
     cartButton.addEventListener("click", () => {
-      alert("Cart isn't open yet. Email hi@sogoofy.com to reserve.");
+      alert("Cart isn't open yet. Email hello@goofyclothing.co.uk to reserve.");
     });
   }
 }
@@ -507,7 +452,7 @@ function render() {
       ${footer()}
     </div>
   `;
-  document.title = "sogoofy - t-shirts";
+  document.title = "Goofy Clothing - t-shirts";
   activateRails();
   activateForms();
   window.scrollTo({ top: 0, left: 0 });

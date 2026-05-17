@@ -1,4 +1,4 @@
-# sogoofy static copy
+# Goofy Clothing static copy
 
 This is a standalone static copy of the `t-shirt-hanger` site. It does not modify
 or depend on the original TanStack Start app.

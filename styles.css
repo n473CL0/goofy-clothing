@@ -69,11 +69,13 @@ button:disabled {
 }
 
 .brand {
+  display: inline-block;
   user-select: none;
   font-size: 30px;
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0;
+  transform: scaleX(-1);
 }
 
 .brand-dot,
@@ -276,15 +278,6 @@ h1 {
 
 .copy p {
   margin: 0 0 20px;
-}
-
-.contact-copy {
-  margin: 16px 0 0;
-  font-size: 14px;
-}
-
-.contact-form {
-  margin-top: 32px;
 }
 
 .field {
