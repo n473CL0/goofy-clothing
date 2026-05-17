@@ -141,6 +141,7 @@ const PRODUCTS = [
 ];
 
 const BUILD_TS = new Date().toISOString().slice(0, 10);
+const BASE_PATH = "/goofy-clothing";
 
 function escapeHtml(value) {
   return String(value)
@@ -151,15 +152,26 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function pathFor(href) {
-  return href;
+function routeHref(path) {
+  if (path === "/") return `${BASE_PATH}/`;
+  return `${BASE_PATH}${path}`;
+}
+
+function appPathFromLocation(pathname) {
+  const normalizedBase = BASE_PATH.endsWith("/") ? BASE_PATH.slice(0, -1) : BASE_PATH;
+  if (pathname === normalizedBase || pathname === `${normalizedBase}/`) return "/";
+  if (pathname.startsWith(`${normalizedBase}/`)) {
+    return pathname.slice(normalizedBase.length).replace(/\/$/, "") || "/";
+  }
+  return pathname.replace(/\/$/, "") || "/";
 }
 
 function navigate(event) {
   const link = event.target.closest("a[data-route]");
   if (!link) return;
   event.preventDefault();
-  history.pushState({}, "", link.getAttribute("href"));
+  const next = new URL(link.getAttribute("href"), window.location.origin);
+  history.pushState({}, "", next.pathname);
   render();
 }
 
@@ -178,18 +190,18 @@ function hangerTee(color, size = 240) {
 function header(pathname) {
   const nav = CATEGORIES.map((category) => {
     const href = `/category/${category.slug}`;
-    return `<a data-route href="${href}" class="${pathname === href ? "active" : ""}">${category.label}</a>`;
+    return `<a data-route href="${routeHref(href)}" class="${pathname === href ? "active" : ""}">${category.label}</a>`;
   }).join("");
 
   return `
     <header class="site-header">
       <div class="header-inner">
-        <a data-route href="/" class="brand" aria-label="sogoofy home">goofy<span class="brand-dot">.</span></a>
+        <a data-route href="${routeHref("/")}" class="brand" aria-label="sogoofy home">goofy<span class="brand-dot">.</span></a>
         <nav class="site-nav">
           ${nav}
           <span class="muted">/</span>
-          <a data-route href="/about" class="${pathname === "/about" ? "active" : ""}">ABOUT</a>
-          <a data-route href="/contact" class="${pathname === "/contact" ? "active" : ""}">CONTACT</a>
+          <a data-route href="${routeHref("/about")}" class="${pathname === "/about" ? "active" : ""}">ABOUT</a>
+          <a data-route href="${routeHref("/contact")}" class="${pathname === "/contact" ? "active" : ""}">CONTACT</a>
         </nav>
       </div>
     </header>
@@ -203,8 +215,8 @@ function footer() {
         <div>
           <div class="muted">// info</div>
           <ul>
-            <li><a data-route href="/about">About</a></li>
-            <li><a data-route href="/contact">Contact</a></li>
+            <li><a data-route href="${routeHref("/about")}">About</a></li>
+            <li><a data-route href="${routeHref("/contact")}">Contact</a></li>
           </ul>
         </div>
         <div>
@@ -256,7 +268,7 @@ function rail(products, compact = false) {
         <a
           data-route
           class="rail-item"
-          href="/product/${product.slug}"
+          href="${routeHref(`/product/${product.slug}`)}"
           style="width: ${itemWidth}px; margin-left: ${margin}px; z-index: ${10 - Math.min(index, 9)}"
           data-index="${index}"
         >
@@ -368,7 +380,7 @@ function productPage(slug) {
     .join("");
 
   return `
-    ${strip(`<a data-route class="link" href="/">← rail</a>`, `// ${product.categoryLabel.toLowerCase()} / ${product.sku}`, product.season)}
+    ${strip(`<a data-route class="link" href="${routeHref("/")}">← rail</a>`, `// ${product.categoryLabel.toLowerCase()} / ${product.sku}`, product.season)}
     <div class="product-grid">
       <div class="product-art">${hangerTee(product.color, 420)}</div>
       <div>
@@ -403,7 +415,7 @@ function notFoundPage() {
       <div>
         <div class="eyebrow">// 404</div>
         <h1>Page not found.</h1>
-        <a data-route href="/" class="outline-link">Back to rail</a>
+        <a data-route href="${routeHref("/")}" class="outline-link">Back to rail</a>
       </div>
     </div>
   `;
@@ -483,7 +495,7 @@ function activateForms() {
 }
 
 function render() {
-  const pathname = window.location.pathname;
+  const pathname = appPathFromLocation(window.location.pathname);
   document.getElementById("app").innerHTML = `
     <div class="app-shell">
       ${header(pathname)}

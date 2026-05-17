@@ -4,6 +4,7 @@ const path = require("node:path");
 
 const root = __dirname;
 const port = Number(process.env.PORT || 4174);
+const basePath = "/goofy-clothing";
 
 const types = {
   ".css": "text/css; charset=utf-8",
@@ -22,7 +23,10 @@ function send(res, status, filePath) {
 http
   .createServer((req, res) => {
     const url = new URL(req.url || "/", `http://localhost:${port}`);
-    const requestedPath = path.normalize(decodeURIComponent(url.pathname));
+    const pathname = url.pathname.startsWith(`${basePath}/`)
+      ? url.pathname.slice(basePath.length)
+      : url.pathname;
+    const requestedPath = path.normalize(decodeURIComponent(pathname));
     const filePath = path.join(root, requestedPath === "/" ? "index.html" : requestedPath);
 
     if (!filePath.startsWith(root)) {
