@@ -201,7 +201,7 @@ function header(pathname) {
   return `
     <header class="site-header">
       <div class="header-inner">
-        <a data-route href="${routeHref("/")}" class="brand" aria-label="Goofy Clothing home">Goofy Clothing<span class="brand-dot">.</span></a>
+        <a data-route href="${routeHref("/")}" class="brand" aria-label="Goofy Clothing home">Goofy<span class="brand-dot">.</span></a>
         <nav class="site-nav">
           ${nav}
         </nav>
@@ -215,13 +215,6 @@ function footer() {
     <footer class="site-footer">
       <div class="footer-grid">
         <div>
-          <div class="muted">// info</div>
-          <ul>
-            <li><span class="muted">goofyclothing.co.uk</span></li>
-            <li><a href="mailto:hello@goofyclothing.co.uk">hello@goofyclothing.co.uk</a></li>
-          </ul>
-        </div>
-        <div>
           <div class="muted">// help</div>
           <ul>
             <li><span class="muted">Shipping</span></li>
@@ -232,7 +225,7 @@ function footer() {
         <div>
           <div class="muted">// follow</div>
           <ul>
-            <li><a href="https://instagram.com">Instagram</a></li>
+            <li><a href="https://www.instagram.com/goofy_brew">Instagram</a></li>
             <li><a href="mailto:hello@goofyclothing.co.uk">hello@goofyclothing.co.uk</a></li>
           </ul>
         </div>
